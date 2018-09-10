@@ -12,6 +12,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+/**Class of goods parser by parameters 
+ * @author Serhii Savchuk
+ * @version 1.0
+ */
 public class ParserItems {	
 	
 	 private static final String SEPARATOR = System.getProperty("file.separator");
@@ -28,6 +32,13 @@ public class ParserItems {
 		 return driver;
 	 }
 	 
+	 /**The method outs the first search page by the parameters
+	  * 
+	  * @param partOfType part of name category
+	  * @param partOfName part of name subcategory
+	  * @param brandName brand manufacturer
+	  * @return driver
+	  */
 	 public WebDriver selectListGoods(String partOfType, String partOfName, String brandName) {
 		 WebDriver driver = getWebDriver();		  
 		 Timer.waitSeconds(5);
@@ -57,7 +68,12 @@ public class ParserItems {
 		 
 		 return driver;
 	 }
-		 
+	
+	/**The method finds all the goods on the first page and on the others, if they exist
+	 * 
+	 * @param driver
+	 * @return ArrayList of objects Class Good
+	 */
 	public List<Good> navigatorPages(WebDriver driver) {
 		List<Good> goods = new ArrayList();
 		
@@ -91,7 +107,12 @@ public class ParserItems {
 		}  
 		 
 		 // Navigator to next pages
-		 WebElement navigationBlock = driver.findElement(By.id("navigation_block"));
+		 WebElement navigationBlock = null;
+		 try {
+		 navigationBlock = driver.findElement(By.id("navigation_block"));
+		 } catch (NoSuchElementException e) {				
+		 }
+		 if (navigationBlock != null) {
 		 List<WebElement> blockPages = navigationBlock.findElements(By.tagName("li"));
 		 boolean active = false;
 		 WebElement nextPage = null;
@@ -112,6 +133,11 @@ public class ParserItems {
 		 else {
 			 nextPageExist = false;
 			 System.out.println("All pages passed");
+		 }
+		 }
+		 else {
+			 nextPageExist = false;
+			 System.out.println("Only first page has been found");
 		 }
 		 
 		} // end while
